@@ -3,6 +3,7 @@ from twilio.twiml.messaging_response import MessagingResponse
 from chatbot import main
 from main import *
 app = Flask(__name__)
+app.config['SECRET_KEY'] = 'hhhh'
 @app.route('/Ressbot',methods = ['POST'])
 def ress():
     incoming_msg = request.values['body']
