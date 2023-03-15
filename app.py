@@ -1,19 +1,24 @@
-from flask import Flask, request, session
-from twilio.twiml.messaging_response import MessagingResponse
-from chatbot import main
-from main import *
+from flask import Flask, request,session,render_template,url_for,redirect
+import openai
+import os
+import main
+# openai.api_key = os.getenv("OPENAI_API_KEY")
 app = Flask(__name__)
-app.config['SECRET_KEY'] = 'hhhh'
-@app.route('/Ressbot',methods = ['POST'])
-def ress():
-    incoming_msg = request.values['body']
-    chat_log = session.get('chat_log')
-    answer = ask(incoming_msg, chat_log)
-    session['chat_log'] = append_interaction_to_chat_log(incoming_msg, answer,
-    chat_log)
-    msg = MessagingResponse()
-    msg.message(answer)
-    return str(msg)
+ans = ""
+@app.route("/",methods = ("GET","POST"))
+def create_layout():
+    global ans
+    if request.method == "POST":
+        ques = request.form['ques']
+        print(ques)
+        ans = main.ask(ques)
+        chat_log = main.append_interaction_to_chat_log(ques,ans)
+    
+    result = ans
+    return render_template("index.html",result = result)
 
+def generate(result):
+    for i in result:
+        "".join(i)
 if __name__ == '__main__':
- app.run(debug=True)
+    app.run()
